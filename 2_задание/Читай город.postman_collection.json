@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "71d09411-a233-4549-bc9b-2aec17a38e0b",
+		"name": "Читай город",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25457605"
+	},
+	"item": [
+		{
+			"name": "Каталог книг",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response.json().data; // Получаем массив объектов с id\r",
+							"var randomIndex = Math.floor(Math.random() * response.length); // Генерируем случайный индекс\r",
+							"var randomId = response[randomIndex].id; // Получаем случайное значение id\r",
+							"\r",
+							"var key = \"IdBook\";\r",
+							"pm.collectionVariables.set(key, randomId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{UrlBooks}}",
+					"host": [
+						"{{UrlBooks}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавление товара в корзину",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var responseBody = pm.response.text(); // Получаем тело ответа как текст\r",
+							"\r",
+							"// Проверяем, является ли тело ответа пустым\r",
+							"if (responseBody.trim() === \"\") {\r",
+							"    pm.test(\"Тело ответа пустое\", function () {\r",
+							"        pm.expect(responseBody).to.be.empty;\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.test(\"Тело ответа не пустое\", function () {\r",
+							"        pm.expect(responseBody).not.to.be.empty;\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": {{IdBook}},\r\n    \"adData\": {\r\n        \"item_list_name\": \"\",\r\n        \"product_shelf\": \"\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/product",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Просмотр корзины",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var response = pm.response.json().products; // Получаем массив объектов с id\r",
+							"var randomIndex = Math.floor(Math.random() * response.length); // Генерируем случайный индекс\r",
+							"var randomId = response[randomIndex].id; // Получаем случайное значение id\r",
+							"\r",
+							"var key = \"Id2Book\";\r",
+							"pm.collectionVariables.set(key, randomId);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"products\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseURL}}",
+					"host": [
+						"{{BaseURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Изменение количества товаров в корзине",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"products\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"id\": {{Id2Book}},\r\n        \"quantity\": 5\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}",
+					"host": [
+						"{{BaseURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Удаление товара из корзины",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"var responseBody = pm.response.text(); // Получаем тело ответа как текст\r",
+							"\r",
+							"// Проверяем, является ли тело ответа пустым\r",
+							"if (responseBody.trim() === \"\") {\r",
+							"    pm.test(\"Тело ответа пустое\", function () {\r",
+							"        pm.expect(responseBody).to.be.empty;\r",
+							"    });\r",
+							"} else {\r",
+							"    pm.test(\"Тело ответа не пустое\", function () {\r",
+							"        pm.expect(responseBody).not.to.be.empty;\r",
+							"    });\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseURL}}/product/{{Id2Book}}",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"product",
+						"{{Id2Book}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "BaseURL",
+			"value": "https://web-gate.chitai-gorod.ru/api/v1/cart",
+			"type": "string"
+		},
+		{
+			"key": "UrlBooks",
+			"value": "https://web-gate.chitai-gorod.ru/api/v2/products?filters%5Bcategories%5D=18030&filters%5BonlyNotOnSale%5D=1&products%5Bpage%5D=1&products%5Bper-page%5D=48&sortPreset=relevance&include=productTexts%2Cpublisher%2CpublisherBrand%2CpublisherSeries%2Cdates%2CliteratureWorkCycles%2Crating\n",
+			"type": "string"
+		},
+		{
+			"key": "IdBook",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "Id2Book",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

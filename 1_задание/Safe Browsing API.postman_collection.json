@@ -1,0 +1,191 @@
+{
+	"info": {
+		"_postman_id": "a1b8e80d-492a-4809-bdcd-102d58cf6210",
+		"name": "Safe Browsing API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25457605"
+	},
+	"item": [
+		{
+			"name": "Получение списков",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"threatLists\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "key",
+						"value": "{{Key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseURL}}/threatLists",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"threatLists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Запрос №1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Парсим JSON-ответ от сервера\r",
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Проверяем, является ли тело ответа пустым объектом\r",
+							"tests[\"Проверка на пустой объект\"] = _.isEqual(responseBody, {});\r",
+							"\r",
+							"// Выводим сообщение в консоль с результатами проверки\r",
+							"console.log(\"Тело ответа:\", responseBody);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"client\": {\r\n    \"clientId\": \"sasha.porubova\",\r\n    \"clientVersion\": \"Lookup\"\r\n  },\r\n  \"threatInfo\": {\r\n    \"threatTypes\": [\"MALWARE\", \"UNWANTED_SOFTWARE\", \"ANY\", \"THREAT_TYPE_TURBO_APPS_ANDROID\"],\r\n    \"platformTypes\": [\"WINDOWS\", \"PLATFORM_TYPE_UNSPECIFIED\", \"ANY_PLATFORM\", \"IOS\"],\r\n    \"threatEntryTypes\": [\"URL\", \"CHROME_EXTENSION\"],\r\n    \"threatEntries\": [\r\n      {\"url\": \"https://www.youtube.com/\"}\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/threatMatches:find?key={{Key}}",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"threatMatches:find"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{Key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Запрос №2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"// Парсим JSON-ответ от сервера\r",
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Проверяем, является ли тело ответа пустым объектом\r",
+							"tests[\"Проверка на пустой объект\"] = _.isEqual(responseBody, {});\r",
+							"\r",
+							"// Выводим сообщение в консоль с результатами проверки\r",
+							"console.log(\"Тело ответа:\", responseBody);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"client\": {\r\n    \"clientId\": \"sasha.porubova\",\r\n    \"clientVersion\": \"Lookup\"\r\n  },\r\n  \"threatInfo\": {\r\n    \"threatTypes\": [\"MALWARE\", \"UNWANTED_SOFTWARE\", \"ANY\", \"THREAT_TYPE_TURBO_APPS_ANDROID\"],\r\n    \"platformTypes\": [\"WINDOWS\", \"PLATFORM_TYPE_UNSPECIFIED\", \"ANY_PLATFORM\", \"IOS\"],\r\n    \"threatEntryTypes\": [\"URL\", \"CHROME_EXTENSION\"],\r\n    \"threatEntries\": [\r\n      {\"url\": \"https://ya.ru/\"}\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/threatMatches:find?key={{Key}}",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"threatMatches:find"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{Key}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseURL",
+			"value": "https://sba.yandex.net/v4",
+			"type": "string"
+		},
+		{
+			"key": "Key",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
